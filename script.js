@@ -60,11 +60,52 @@ const setProgress = (e) => {
 };
 
 // Volume Controls --------------------------- //
-// Toggle Mute
+let lastVolume = 1;
+// Volume Bar
+const changeVolume = (e) => {
+  let volume = e.offsetX / volumeRange.offsetWidth;
+
+  // Rounding volume up or down
+  volume < 0.1 ? (volume = 0) : volume > 0.9 ? (volume = 1) : false;
+
+  // Update volume bar UI
+  volumeBar.style.width = `${volume * 100}%`;
+  video.volume = volume;
+
+  // Change icon depending on volume
+  volumeIcon.className = "";
+  if (volume > 0.7) {
+    volumeIcon.classList.add("fas", "fa-volume-up");
+  } else if (volume > 0) {
+    volumeIcon.classList.add("fas", "fa-volume-down");
+  } else {
+    volumeIcon.classList.add("fas", "fa-volume-off");
+  }
+  lastVolume = volume;
+};
+
+// Toggle Mute/Unmute
 const toggleMute = () => {
-  volumeIcon.classList.toggle("fa-volume-up");
-  volumeIcon.classList.toggle("fa-volume-mute");
-  !video.muted ? (video.muted = true) : (video.muted = false);
+  volumeIcon.className = "";
+  if (video.volume) {
+    lastVolume = video.volume;
+    video.volume = 0;
+    volumeBar.style.width = 0;
+    volumeIcon.classList.add("fas", "fa-volume-mute");
+    volumeIcon.setAttribute("title", "Unmute");
+  } else {
+    volumeBar.style.width = `${lastVolume * 100}%`;
+    volumeIcon.className = "";
+    if (lastVolume > 0.7) {
+      volumeIcon.classList.add("fas", "fa-volume-up");
+    } else if (lastVolume > 0) {
+      volumeIcon.classList.add("fas", "fa-volume-down");
+    } else {
+      volumeIcon.classList.add("fas", "fa-volume-off");
+    }
+    video.volume = lastVolume;
+    volumeIcon.setAttribute("title", "Mute");
+  }
 };
 
 // Change Playback Speed -------------------- //
@@ -77,4 +118,5 @@ video.addEventListener("click", togglePlay);
 video.addEventListener("timeupdate", updateProgress);
 video.addEventListener("canplay", updateProgress);
 progressRange.addEventListener("click", setProgress);
+volumeRange.addEventListener("click", changeVolume);
 volumeIcon.addEventListener("click", toggleMute);
