@@ -2,7 +2,7 @@ const video = document.querySelector("video");
 const progressRange = document.querySelector(".progress-range");
 const progressBar = document.querySelector(".progress-bar");
 const playBtn = document.getElementById("play-btn");
-const volumnIcon = document.getElementById("volume-icon");
+const volumeIcon = document.getElementById("volume-icon");
 const volumeRange = document.querySelector(".volume-range");
 const volumeBar = document.querySelector(".volume-bar");
 const currentTime = document.querySelector(".time-elapsed");
@@ -60,6 +60,12 @@ const setProgress = (e) => {
 };
 
 // Volume Controls --------------------------- //
+// Toggle Mute
+const toggleMute = () => {
+  volumeIcon.classList.toggle("fa-volume-up");
+  volumeIcon.classList.toggle("fa-volume-mute");
+  !video.muted ? (video.muted = true) : (video.muted = false);
+};
 
 // Change Playback Speed -------------------- //
 
@@ -71,3 +77,4 @@ video.addEventListener("click", togglePlay);
 video.addEventListener("timeupdate", updateProgress);
 video.addEventListener("canplay", updateProgress);
 progressRange.addEventListener("click", setProgress);
+volumeIcon.addEventListener("click", toggleMute);
