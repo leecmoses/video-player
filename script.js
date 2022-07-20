@@ -34,6 +34,20 @@ const togglePlay = () => {
 video.addEventListener("ended", showPlayIcon);
 
 // Progress Bar ---------------------------------- //
+// Calculate display time format
+const displayTime = (time) => {
+  let minutes = String(Math.floor(time / 60)).padStart(2, "0");
+  let seconds = String(Math.floor(time % 60)).padStart(2, "0");
+
+  return `${minutes}:${seconds}`;
+};
+// Update progress bar as video plays
+const updateProgress = () => {
+  let progress = (video.currentTime / video.duration) * 100;
+  progressBar.style.width = `${progress}%`;
+  currentTime.textContent = `${displayTime(video.currentTime)} / `;
+  duration.textContent = `${displayTime(video.duration)}`;
+};
 
 // Volume Controls --------------------------- //
 
@@ -44,4 +58,5 @@ video.addEventListener("ended", showPlayIcon);
 // Events Listeners
 playBtn.addEventListener("click", togglePlay);
 video.addEventListener("click", togglePlay);
-
+video.addEventListener("timeupdate", updateProgress);
+video.addEventListener("canplay", updateProgress);
